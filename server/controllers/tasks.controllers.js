@@ -35,16 +35,23 @@ export const createTask = async (req, res) => {
   });
 };
 
-export const updateTask = (req, res) => {
-  res.send("Actualizando tarea");
+export const updateTask = async (req, res) => {
+  const [result] = await pool.query("UPDATE tasks SET ? WHERE id = ?", [
+    req.body,
+    req.params.id,
+  ]);
+
+  res.json(result);
 };
 
 export const deleteTask = async (req, res) => {
-  const [result] = await pool.query("DELETE FROM tasks WHERE id = ?",[req.params.id])
+  const [result] = await pool.query("DELETE FROM tasks WHERE id = ?", [
+    req.params.id,
+  ]);
 
-  if(result.affectedRows === 0){
-    return res.status(404).json({ messaje : "Task not found"})
+  if (result.affectedRows === 0) {
+    return res.status(404).json({ messaje: "Task not found" });
   }
 
-  res.sendStatus(204)
+  res.sendStatus(204);
 };
