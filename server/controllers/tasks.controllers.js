@@ -39,6 +39,12 @@ export const updateTask = (req, res) => {
   res.send("Actualizando tarea");
 };
 
-export const deleteTask = (req, res) => {
-  res.send("Elimninano tarea");
+export const deleteTask = async (req, res) => {
+  const [result] = await pool.query("DELETE FROM tasks WHERE id = ?",[req.params.id])
+
+  if(result.affectedRows === 0){
+    return res.status(404).json({ messaje : "Task not found"})
+  }
+
+  res.sendStatus(204)
 };
