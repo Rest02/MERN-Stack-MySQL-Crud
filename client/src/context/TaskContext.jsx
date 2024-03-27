@@ -5,7 +5,9 @@ import {
   createTaskRequest,
   getOneTaskRequest,
   updateTaskRequest,
+  toggleTaskDoneRequest,
 } from "../api/task.api";
+import { useNavigate } from 'react-router-dom'
 
 export const TaskContext = createContext();
 
@@ -19,6 +21,7 @@ export const useTask = () => {
 
 export const TaskContextProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
+  const navigate = useNavigate()
 
   async function loadTask() {
     const response = await getTaskRequest();
@@ -61,9 +64,32 @@ export const TaskContextProvider = ({ children }) => {
     }
   };
 
+  const toggleTaskDone = async (id) => {
+    try {
+      const taskFound = tasks.find((task) => task.id === id);
+      await toggleTaskDoneRequest(id, taskFound.done === 0 ? true : false);
+      // setTasks(
+      //   tasks.map((task) =>
+      //     task.id === id ? { ...task, done: !task.done } : task
+      //   )
+      // );
+      navigate(0)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <TaskContext.Provider
-      value={{ tasks, loadTask, deleteTask, createTask, getTask, updateTask }}
+      value={{
+        tasks,
+        loadTask,
+        deleteTask,
+        createTask,
+        getTask,
+        updateTask,
+        toggleTaskDone,
+      }}
     >
       {children}
     </TaskContext.Provider>
