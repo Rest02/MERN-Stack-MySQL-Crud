@@ -1,8 +1,10 @@
 import React from "react";
 import { useTask } from "../context/TaskContext";
+import { useNavigate } from "react-router-dom";
 
 function TaskCard({ task }) {
   const { deleteTask } = useTask();
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -10,8 +12,8 @@ function TaskCard({ task }) {
       <p>{task.description}</p>
       <span>{task.done == 1 ? "✅" : "❌"}</span>
       <span>{task.createAT}</span>
-      <button>Edit</button>
       <button onClick={() => deleteTask(task.id)}>Delete</button>
+      <button onClick={() => navigate(`/edit/${task.id}`)}>Edit</button>
     </div>
   );
 }
